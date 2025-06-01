@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class OrderItem {
 
     private String product;
@@ -21,4 +20,10 @@ public class OrderItem {
 
     @Field(targetType = FieldType.DECIMAL128)
     private BigDecimal price;
+
+    public OrderItem(String product, Integer quantity, BigDecimal price) {
+        this.product = product;
+        this.quantity = quantity;
+        this.price = price;
+    }
 }
