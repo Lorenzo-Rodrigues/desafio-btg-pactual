@@ -5,6 +5,7 @@ import com.lorenzo.desafio_btg_pactual.entity.OrderEntity;
 import com.lorenzo.desafio_btg_pactual.entity.OrderItem;
 import com.lorenzo.desafio_btg_pactual.listener.dto.OrderCreatedEvent;
 import com.lorenzo.desafio_btg_pactual.repository.OrderRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +19,7 @@ import java.util.List;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
 @Service
+@Slf4j
 public class OrderService {
 
     private final OrderRepository orderRepository;
@@ -37,10 +39,12 @@ public class OrderService {
          entity.setItems(getOrderItems(event));
          entity.setTotal(getTotal(event));
 
+         log.info("saving order ...");
          orderRepository.save(entity);
     }
 
     public Page<OrderResponse> findAllByCustomerId(Long customerId, PageRequest pageRequest){
+        log.info("finding customer's id {} orders...", customerId);
         var orders = orderRepository.findAllByCustomerId(customerId,pageRequest);
 
         return orders.map(OrderResponse::fromEntity);
@@ -51,7 +55,7 @@ public class OrderService {
                 match(Criteria.where("customerId").is(customerId)),
                 group().sum("total").as("total")
         );
-
+        log.info("operating aggregation ...");
         var response = mongoTemplate.aggregate(aggregations,"orders", Document.class);
 
         return new BigDecimal(response.getUniqueMappedResult().get("total").toString());
