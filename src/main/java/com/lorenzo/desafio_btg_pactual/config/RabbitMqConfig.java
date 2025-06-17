@@ -17,7 +17,7 @@ public class RabbitMqConfig {
     public static final String FANOUT_ORDER_EXCHANGE = "btg-pactual.order-created.exchange";
     public static final String ORDER_CREATED_QUEUE = "order-created";
     public static final String ORDER_CREATED_DLQ = "order-created.dlq";
-    public static final String FANOUT_ORDER_DLX = "orders.v1.order-created.dlx";
+    public static final String FANOUT_ORDER_DLX = "btg-pactual.order-created.dlx";
 
     @Bean
     public Jackson2JsonMessageConverter jackson2JsonMessageConverter(){
@@ -49,7 +49,7 @@ public class RabbitMqConfig {
         return new FanoutExchange(FANOUT_ORDER_EXCHANGE);
     }
     @Bean
-    public Binding bind(){
+    public Binding binding(){
         var queue = orderQueue();
         var exchange = orderFanoutExchange();
         return BindingBuilder.bind(queue).to(exchange);
