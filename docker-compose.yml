@@ -1,4 +1,12 @@
 services:
+  api:
+    image: aplicacao
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+      - rabbitmq
+
   mongodb:
     image: mongo
     ports:
